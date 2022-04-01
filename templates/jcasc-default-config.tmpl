@@ -189,14 +189,14 @@ tool:
 jobs:
   - script: >
       pipelineJob('TEST PIPELINE') { 
-        def repo = 'https://github.com/Ykisialiou/jenkinscicdplayground.git'
+        def repo = 'https://github.com/Ykisialiou/terraform-jenkins.git'
         definition {
           cpsScm {
             scm {
               git {
                 remote { url(repo) }
                 branches('master')
-                scriptPath('Jenkinsfile')
+                scriptPath('test-pipeline/Jenkinsfile')
                 extensions { } 
               }
             }
