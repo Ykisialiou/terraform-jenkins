@@ -1,0 +1,205 @@
+jenkins:
+  agentProtocols:
+  - "JNLP4-connect"
+  - "Ping"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  clouds:
+  - kubernetes:
+      containerCap: 10
+      containerCapStr: "10"
+      jenkinsUrl: "${jenkins_service_url}" 
+      name: "kubernetes"
+      namespace: "jenkins"
+      templates:
+      - containers:
+        - args: "9999999"
+          command: "sleep"
+          image: "jenkins/inbound-agent"
+          livenessProbe:
+            failureThreshold: 0
+            initialDelaySeconds: 0
+            periodSeconds: 0
+            successThreshold: 0
+            timeoutSeconds: 0
+          name: "jenkins-worker"
+          ttyEnabled: true
+          workingDir: "/home/jenkins/agent"
+        id: "edca943c-a40a-49c1-b4d6-e7a8bb4b7e76"
+        label: "worker1"
+        name: "jenkins-worker"
+        namespace: "jenkins"
+        nodeUsageMode: NORMAL
+        yamlMergeStrategy: "override"
+      - label: "docker-dind"
+        name: "docker"
+        namespace: "jenkins"
+        yaml: |-
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+            - name: docker
+              image: docker:20.10.14-dind
+              securityContext:
+                privileged: true
+              env:
+                - name: DOCKER_TLS_CERTDIR
+                  value: ""
+        yamlMergeStrategy: "override"
+        yamls:
+        - |-
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+            - name: docker
+              image: docker:20.10.14-dind
+              securityContext:
+                privileged: true
+              env:
+                - name: DOCKER_TLS_CERTDIR
+                  value: ""
+      - label: "tester"
+        name: "tester"
+        namespace: "jenkins"
+        yaml: |-
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+            - name: go
+              image: golang:1.17-alpine
+              args: ["/bin/sh","-c", "sleep 3600"]
+        yamlMergeStrategy: "override"
+        yamls:
+        - |-
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+            - name: go
+              image: golang:1.17-alpine
+              args: ["/bin/sh","-c", "sleep 3600"]
+      - label: "linter"
+        name: "linter"
+        namespace: "jenkins"
+        yaml: |-
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+            - name: go
+              image: golangci/golangci-lint:v1.45.2
+              args: ["/bin/sh","-c", "sleep 3600"]
+        yamlMergeStrategy: "override"
+        yamls:
+        - |-
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+            - name: go
+              image: golangci/golangci-lint:v1.45.2
+              args: ["/bin/sh","-c", "sleep 3600"]
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  labelAtoms:
+  - name: "built-in"
+  - name: "docker-dind"
+  - name: "linter"
+  - name: "tester"
+  - name: "worker1"
+  markupFormatter: "plainText"
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  numExecutors: 2
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  securityRealm:
+    local:
+      allowsSignup: false
+      enableCaptcha: false
+      users:
+      - id: "admin"
+        name: ${jenkins_admin_name}
+        password: $${jenkins-admin-password}
+  slaveAgentPort: 50000
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  sSHD:
+    port: -1
+unclassified:
+  buildDiscarders:
+    configuredBuildDiscarders:
+    - "jobBuildDiscarder"
+  fingerprints:
+    fingerprintCleanupDisabled: false
+    storage: "file"
+  gitSCM:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  junitTestResultStorage:
+    storage: "file"
+  location:
+    adminAddress: "address not configured yet <nobody@nowhere>"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+    useTls: false
+  pollSCM:
+    pollingThreadCount: 10
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  mavenGlobalConfig:
+    globalSettingsProvider: "standard"
+    settingsProvider: "standard"
+jobs:
+  - script: >
+      pipelineJob('TEST PIPELINE') { 
+        def repo = 'https://github.com/Ykisialiou/jenkinscicdplayground.git'
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote { url(repo) }
+                branches('master')
+                scriptPath('Jenkinsfile')
+                extensions { } 
+              }
+            }
+          }
+        }
+      } 

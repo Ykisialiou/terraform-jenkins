@@ -1,0 +1,123 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - string:
+          id: "e50e3adf-bf17-4dd4-a7d7-45cb9ef013ef"
+          scope: GLOBAL
+          secret: "{AQAAABAAAAPgSvRX5ZJJ8vSZ1HN9pt7OimuZen/S71/3sQ0DY4IWK2sMeoKk5eldVNDCcIPrvDWkYDTNXjC+MManQeFoQ6VeAlyqZ2DScNVlZ/PtMs7T769c1K/KnciiusUyKbLLp2vGa1EQo1cX3WzEEk7qjVLctWfKsqD0FUhIa5cWExN7Mjh7yqMrqyPL9i+1N6GiGOc3R/q3l/K6Jdh36kT6qUyyYkPVCoqOPeRdoFEor6GEDDFX+1ALEMq8JJkwhg21paZvH6ryI7rs5aKXjGe71hxV4I/1azk5fU2lfaJV30kTG2sF7V4ByIoE7Etl801TF2j7D6Ygi7M5+zBmRy6t9PmyNL8ai6AsmLcHJJI9o14tSwp5Z+GTALhM3wNyHkMn6tf9EqhGH/w8fzon3xfwynycNViObaLMc2G38HvADCq0f1K2CvXJ9rtzI0quPu7M+zrDaMJU4TSp6tLm2Xhx1+W2EMjiH96j9sDNTUCEDV/XOTW1MxYwKdqHu+2JRQegUPKQN/OD9+Qqb3Kve1YeAw9fytulo69XXxU65PLe3AZBI/NMRD4j/CIPIt3Mo+ZOLxhERC2nT2EwuIGBg76nsJtMMspUaX6xNY8h7EIcbtGkkGQcs63lTzYhgXeyf/xDIontxgyioqBMoOcWLOjpYCIsEMHt1W5Vat4gtnnDbzs2z8KJwotcgS6UvV8NDkZRSUgLe1o8XHniter1OVUfAXGHcfi4oRe/r5KTPQ2uhK6Vj/CtKoNbZvn9spusCPqnGqSRcYlIiWMC3YQKIC2/daL8cXCRLUaUMP3PK0TOtGJJdGEEVEr2w+GL6n/olgKmrRVMl56VeqRlGEZdnkp7LEwROyFz8TVFltkTu5rNOP6aqTl5nOh+muZH47+3h8jNAGSTkYaKVPNhl2JhdO8SyipxJ0gg+nnSbDg52shxgcpbWHWkASPqR076kHGBYzA5qDIjPoAkXRJDc8aYBqSYamS8U/HfydQX51CmK/8Nw3ybqPf34D+PMWoSrAUJEyyY9WTRLBFghbUy9oFIhSVBN6vp4932bUnxMJsIcXCbqKj5KCEgVVQc+ObcAP58PPXLN9K0ABk9eIWKSIy36vFR8VP+pt//u5l6O02KK++08sRdkQrZBacQ1XI0VV0pu39Gc7+QOqwUySETjECwVP7y5SYQM6wmEkEzGLAVfSBhpL1JAGo3saEtJFPCAytKhluRjHOA8wntgXMldTzVcKWK4B5j/Cupj5BGBFZ7XMyLagNUkLIt2gLcBughUJDbiKppjYs7GsrumytsKN2XQXT3F+bVhdKTMqdrWlQ+Fvuoau4hweUa3LU0A3oSdpPXdPoMfBxz}"
+jenkins:
+  agentProtocols:
+  - "JNLP4-connect"
+  - "Ping"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false    
+  clouds:
+  - kubernetes:
+      containerCap: 10
+      containerCapStr: "10"
+      credentialsId: "e50e3adf-bf17-4dd4-a7d7-45cb9ef013ef"
+      jenkinsUrl:   "${jenkins_service_url}"
+      name: "kubernetes"
+      namespace: "jenkins"
+      templates:
+      - containers:
+        - args: "9999999"
+          command: "sleep"
+          image: "jenkins/inbound-agent"
+          livenessProbe:
+            failureThreshold: 0
+            initialDelaySeconds: 0
+            periodSeconds: 0
+            successThreshold: 0
+            timeoutSeconds: 0
+          name: "jenkins-worker"
+          ttyEnabled: true
+          workingDir: "/home/jenkins/agent"
+        id: "edca943c-a40a-49c1-b4d6-e7a8bb4b7e76"
+        label: "worker1"
+        name: "jenkins-worker"
+        namespace: "jenkins"
+        nodeUsageMode: NORMAL
+        yamlMergeStrategy: "override"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  labelAtoms:
+  - name: "built-in"
+  - name: "worker1"
+  markupFormatter: "plainText"
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  numExecutors: 2
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  securityRealm:
+    local:
+      allowsSignup: false
+      enableCaptcha: false
+      users:
+      - id: "admin"
+        name: "admin"
+        password: "SuperSecret"
+  slaveAgentPort: 50000
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  sSHD:
+    port: -1
+unclassified:
+  buildDiscarders:
+    configuredBuildDiscarders:
+    - "jobBuildDiscarder"
+  fingerprints:
+    fingerprintCleanupDisabled: false
+    storage: "file"
+  gitSCM:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  junitTestResultStorage:
+    storage: "file"
+  location:
+    adminAddress: "address not configured yet <nobody@nowhere>"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+    useTls: false
+  pollSCM:
+    pollingThreadCount: 10
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  mavenGlobalConfig:
+    globalSettingsProvider: "standard"
+    settingsProvider: "standard"

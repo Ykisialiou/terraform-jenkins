@@ -1,0 +1,6 @@
+kubernetes:1.31.3
+workflow-aggregator:2.6
+git:4.10.2
+configuration-as-code:1414.v878271fc496f
+docker-workflow:1.28
+job-dsl:1.78.3
