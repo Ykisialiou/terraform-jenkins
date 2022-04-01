@@ -117,3 +117,12 @@ TODO: later the step should put built container to docker registry by choice.
 1. Inspect controller-worker connection
 1. Consider upgrade for jenkins containers (controller, worker, specific build containers)
 
+## Improve pipeline
+
+
+Current pipeline is pretty synthetic
+More steps needed to make it better
+
+1. Put built docket image to docker registry
+1. Deploy to different namespace to k8s having release strategy in mind
+
