@@ -97,7 +97,7 @@ resource "kubernetes_cluster_role_binding" "jenkins-rbac" {
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "ClusterRole"
-    name      = "cluster-admin"  //kubernetes_cluster_role.jenkins-controller-role.metadata.0.name//
+    name      =  kubernetes_cluster_role.jenkins-controller-role.metadata.0.name //"cluster-admin" 
   }
   subject {
     kind      = "ServiceAccount"
