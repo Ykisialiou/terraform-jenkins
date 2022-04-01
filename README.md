@@ -13,10 +13,15 @@ This variable is fist in the list of variables for simplicity
 
 # Architecture
 
+![Architecture](img/schema.png)
 Jenkins controller stateful set deployed to Kubernetes by terraform, using jenkins controller
+
 jenkins workers are deployed to k8s by Jenkins kubernetes plugin
+
 Custom container images are used in pipelines 
+
 Building  docker containers are done by docker dind 
+
 
 # Deployment
 
@@ -49,6 +54,12 @@ This approach considered pretty secure if you trust k8s secrets.
 However password can be setup by user with specifying `jenkins_password` variable like `terraform plan -var 'jenkins_password=YouPasswordHEre'` or tfvars
 or by modification of default. However, this feature if pretty synthetic.
 
+# Connect
+
+Jenkins service exposed as NodePort at selected port `30080`. If this port is busy different one can be selected by variable `controller_node_port`
+For minikube  ` minikube service list  | grep -e 'jenkins ' | awk -F'|' '{print $5}'` can be used to found Jenkins url. Default username is admin.
+
+
 ### How to get generated password
 
 Password can by get from k8s secrets, but to simplify operations output is created. To get the password from output something like this can be used after
@@ -79,6 +90,7 @@ golangci/golangci-lint container is used for this step. `golangci-lint` binary i
 Tests are run by Makefile instruction provided by code developer. 
 
 1. Build. docker-dind container is used to build docker container for the repo. Dockerfile provided by repo developer. Container name and container labels are configurable by env variables. 
+
 TODO: container label should be changed in code or by Jenkins, not hardcoded in Jenkinsfile. 
 TODO: later the step should put built container to docker registry by choice. 
 
@@ -94,6 +106,7 @@ TODO: later the step should put built container to docker registry by choice.
 
 1. Test solution in different k8s installations (tested in minikube)
 1. Add optional steps for cloud based installations (loadbalancer, pvc/storage-class)
+1. Consider caching, reusing volumes for build containers to make builds faster
 
 
 ## Harden Jenkins installation. 
