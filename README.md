@@ -14,11 +14,17 @@ This variable is fist in the list of variables for simplicity
 # Architecture
 
 ![Architecture](img/schema.png)
-Jenkins controller stateful set deployed to Kubernetes by terraform, using jenkins controller
 
-jenkins workers are deployed to k8s by Jenkins kubernetes plugin
+Jenkins controller stateful set deployed to Kubernetes by terraform. Terraform Kubernetes provider is used 
+as it is powerfull and terraform native toolset to do deployments to Kubernetes. 
 
-Custom container images are used in pipelines 
+
+using  jenkins workers are deployed to k8s by Jenkins kubernetes plugin. It's the most native and understandable way 
+to deal with on demand workers in k8s, pretty stable and supported. 
+
+Custom container images are used in pipelines. At the moment they are public, so we have a possibility to use any runtime, versions and 
+dependencies, switch between them and having no cross dependencies between builds, build stages and later different projects. 
+TODO here is to have a full set of dependencies images in local registry with them own lifecircle each. 
 
 Building  docker containers are done by docker dind 
 
